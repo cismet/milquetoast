@@ -1,7 +1,6 @@
-# milquetoast
-Simple and small backup utility
+# MilqueToast
+Simple and small backup utility for your services
 
-# RasterFari
 ![milquetoast_image](https://cloud.githubusercontent.com/assets/837211/24571041/222ec062-166f-11e7-8904-2d73689abea3.png)
 
 No backup, no pitty ...
