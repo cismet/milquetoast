@@ -1,0 +1,3 @@
+#!/bin/bash
+PREPFOLDER=$1
+tar -zcvf $PREPFOLDER/$(date +"%Y%m%d").simple.folder.archive.tar.gz /htdocs/anonexistingsubdomain.cismet.de/

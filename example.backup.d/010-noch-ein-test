@@ -1,0 +1,1 @@
+mysqldump --opt --password=*** -u user dbname > $PREPFOLDER/$(date +"%Y%m%d").cute.db.dump.sql
