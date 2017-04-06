@@ -1,15 +1,19 @@
  #!/bin/bash
  
 ## config 
-MT_MAIN_NAME=leo
+MT_MAIN_NAME=billy
 MT_RCLONE_TARGET=gdrive:/cismet/backups/$MT_MAIN_NAME
 
-MT_BACKUPS=/var/backups/cismet
-MT_BACKUP_PREPS=/var/backups/cismet_prep
+MT_BACKUPS=/var/backups/milquetoast/backups
+MT_BACKUP_PREPS=/var/backups/milquetoast/preparation
 MT_BACKUPD=/etc/backup.d/
-
-## -------------------------------------------------------------
-
+echo
+echo "-------------------------------------------------------------"
+echo "-- Milquetoast ... No backup no pitty "
+echo "-------------------------------------------------------------"
+echo
+echo '... doing the work for '$(date +"%Y%m%d")
+echo
 #delete prep folder
 rm $MT_BACKUP_PREPS/$(date +"%Y%m%d")*
 
@@ -25,7 +29,17 @@ cd $MT_BACKUP_PREPS
 tar -zcvf $MT_BACKUPS/$(date +"%Y%m%d").$MT_MAIN_NAME.tar.gz ./$(date +"%Y%m%d")*
 
 #delete old backups
-rotate-backups --daily=10 --weekly=5 --monthly=13 --yearly=5 $MT_BACKUPS
+echo "rotate-backups --daily=10 --weekly=5 --monthly=13 --yearly=5 $MT_BACKUPS"
 
 #externalize
-/usr/sbin/rclone sync $MT_BACKUPS gdrive:/cismet/backups/$MT_MAIN_NAME
+echo "externalize ..."
+
+docker run -t --rm \
+  -e PUID=$(id -u $(whoami)) \
+  -e PGID=$(id -g $(whoami)) \
+  -v  /etc/backup.d/rclone.conf:/home/.rclone.conf \
+  -v $MT_BACKUPS:/data \
+  farmcoolcow/rclone \
+    sync /data gdrive:/cismet/backups/$MT_MAIN_NAME
+echo
+echo "------------------------------------------------------- done."
