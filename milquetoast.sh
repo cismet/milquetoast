@@ -1,4 +1,4 @@
- #!/bin/bash
+#!/bin/bash
  
 ## config
 set +o allexport
@@ -23,7 +23,7 @@ echo
 
 #delete prep folder
 if [ ! -z "$MT_BACKUP_PREPS" ]; then
-    rm "$MT_BACKUP_PREPS/*"
+    rm $MT_BACKUP_PREPS/*
 fi
 
 
@@ -45,8 +45,8 @@ echo "rotate-backups --daily=10 --weekly=5 --monthly=13 --yearly=5 $MT_BACKUPS"
 echo "externalize ..."
 
 docker run -t --rm \
-  -e PUID=$(id -u $(whoami)) \
-  -e PGID=$(id -g $(whoami)) \
+  -e PUID=$(id -u backup) \
+  -e PGID=$(id -g backup) \
   -v $MT_RCLONE_CONF:/home/.rclone.conf \
   -v $MT_BACKUPS:/data \
   farmcoolcow/rclone \
