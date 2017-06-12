@@ -41,7 +41,9 @@ cd $MT_BACKUP_PREPS
 tar -zcPf $MT_BACKUPS/$TODAY.$MT_MAIN_NAME.tar.gz ./$TODAY*
 
 #delete old backups
-echo "rotate-backups --daily=10 --weekly=5 --monthly=13 --yearly=5 $MT_BACKUPS"
+ROTATE_DELETE_OPTIONS="--daily=10 --weekly=5 --monthly=13 --yearly=5"
+echo "* executing rotate-delete $ROTATE_DELETE_OPTIONS $MT_BACKUPS"
+docker run -t --rm -v $MT_BACKUPS:/data cismet/rotated-delete $ROTATE_DELETE_OPTIONS
 
 #externalize
 echo "* externalize"
