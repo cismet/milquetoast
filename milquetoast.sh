@@ -1,12 +1,16 @@
  #!/bin/bash
  
-## config 
-MT_MAIN_NAME=billy
-MT_RCLONE_TARGET=gdrive:/cismet/backups/$MT_MAIN_NAME
+## config
+set +o allexport
+#MT_MAIN_NAME=<HOSTNAME>
+#MT_RCLONE_CONF=<PATH_TO_RCLONE.CONF>
+#MT_RCLONE_TARGET=<CLOUDTYPE>:<SOME_PATH>/$MT_MAIN_NAME
+#MT_BACKUPS=<SOME_PATH>
+#MT_BACKUP_PREPS=<SOME_PATH>
+#MT_BACKUPD=<PATH_TO_BACKUP.D_DIR>
+. /etc/milquetoast.conf
+set -o allexport
 
-MT_BACKUPS=/var/backups/milquetoast/backups
-MT_BACKUP_PREPS=/var/backups/milquetoast/preparation
-MT_BACKUPD=/etc/backup.d/
 TODAY=$(date +"%Y%m%d")
 echo
 echo "-------------------------------------------------------------"
@@ -15,8 +19,13 @@ echo "-------------------------------------------------------------"
 echo
 echo '... doing the work for '$TODAY
 echo
+
+
 #delete prep folder
-rm $MT_BACKUP_PREPS/*
+if [ ! -z "$MT_BACKUP_PREPS" ]; then
+    rm "$MT_BACKUP_PREPS/*"
+fi
+
 
 #execute simple backup scripts
 cd $MT_BACKUPD
@@ -38,9 +47,9 @@ echo "externalize ..."
 docker run -t --rm \
   -e PUID=$(id -u $(whoami)) \
   -e PGID=$(id -g $(whoami)) \
-  -v  /etc/backup.d/rclone.conf:/home/.rclone.conf \
+  -v $MT_RCLONE_CONF:/home/.rclone.conf \
   -v $MT_BACKUPS:/data \
   farmcoolcow/rclone \
-    sync /data gdrive:/cismet/backups/$MT_MAIN_NAME
+    sync /data $MT_RCLONE_TARGET
 echo
 echo "------------------------------------------------------- done."
