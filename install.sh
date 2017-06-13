@@ -32,6 +32,9 @@ MT_BACKUP_PREPS=$MT_VAR_DIR/preparation
 MT_BACKUPD=$MT_ETC_DIR/backup.d
 EOF
 
+# making milquetoast a system command
+sudo ln -s $(pwd)/milquetoast.sh /usr/local/bin/milquetoast
+
 # creating exemple file
 cat <<EOF | sudo tee -a $MT_ETC_DIR/backup.d/000-example.sh > /dev/null
 #!/bin/bash
@@ -49,5 +52,3 @@ sudo chown -R backup:backup \
    $MT_VAR_DIR \
    $MT_CONF
    
-# making milquetoast a system command
-sudo ln -s ./milquetoast.sh /usr/local/bin/milquetoast
