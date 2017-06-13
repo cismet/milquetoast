@@ -20,19 +20,21 @@ echo
 echo "... doing the work for $TODAY"
 echo
 
+# removing previous preperation files
 echo "* cleanup"
-
 if [ ! -z "$MT_BACKUP_PREPS" ]; then
-    rm "$MT_BACKUP_PREPS/*"
+    for prep in "$MT_BACKUP_PREPS/*"; do
+        echo "  -> deleting preparation file: $prep"
+        rm $prep
+    done
 fi
 
 #execute simple backup scripts
 echo "* executing backup steps:"
 cd $MT_BACKUPD
-for backupstep in $(ls -1 [0-9+]* 2> /dev/null)
-    do
-        echo "  -> $backupstep"
-        $MT_BACKUPD/$backupstep $MT_BACKUP_PREPS $TODAY 
+for backupstep in $(ls -1 [0-9+]* 2> /dev/null); do
+    echo "  -> $backupstep"
+    $MT_BACKUPD/$backupstep $MT_BACKUP_PREPS $TODAY 
 done
 
 #create a single backup file for today
@@ -47,7 +49,6 @@ docker run -t --rm -v $MT_BACKUPS:/data cismet/rotated-delete $ROTATE_DELETE_OPT
 
 #externalize
 echo "* externalize"
-
 docker run -t --rm \
   -e PUID=$(id -u backup) \
   -e PGID=$(id -g backup) \
