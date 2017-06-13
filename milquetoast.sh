@@ -43,7 +43,9 @@ done
 
 #create a single backup file for today
 echo "* creating single backup file for today"
-tar -zcPf $MT_BACKUPS/$TODAY.$MT_MAIN_NAME.tar.gz $MT_BACKUP_PREPS/$TODAY*
+cd $MT_BACKUP_PREPS
+tar -zcPf $MT_BACKUPS/$TODAY.$MT_MAIN_NAME.tar.gz $TODAY*
+cd -
 
 #delete old backups
 ROTATE_DELETE_OPTIONS="--daily=10 --weekly=5 --monthly=13 --yearly=5"
