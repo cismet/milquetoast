@@ -32,19 +32,13 @@ MT_BACKUP_PREPS=$MT_VAR_DIR/preparation
 MT_BACKUPD=$MT_ETC_DIR/backup.d
 EOF
 
-# making milquetoast a system command
-sudo ln -s $(pwd)/milquetoast.sh /usr/local/bin/milquetoast
-
 # creating exemple file
 cat <<EOF | sudo tee -a $MT_ETC_DIR/backup.d/000-example.sh > /dev/null
 #!/bin/bash
 PREPFOLDER=\$1
+TODAY=\$(date +"%Y%m%d")
+touch \$PREPFOLDER/\$TODAY.firstTest
 EOF
-
-# ? PREPFOLDER is not set anywhere, so what is this supposed to do ?
-sudo bash -c 'TODAY=\$(date +"%Y%m%d")'
-sudo bash -c 'cd \$PREPFOLDER'
-sudo bash -c 'touch \$TODAY.firstTest'
 
 # changing ownership
 sudo chown -R backup:backup \
@@ -52,3 +46,5 @@ sudo chown -R backup:backup \
    $MT_VAR_DIR \
    $MT_CONF
    
+# making milquetoast a system command
+sudo ln -s $(pwd)/milquetoast.sh /usr/local/bin/milquetoast
