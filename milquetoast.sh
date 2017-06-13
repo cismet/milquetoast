@@ -23,24 +23,27 @@ echo
 # removing previous preperation files
 echo "* cleanup"
 if [ ! -z "$MT_BACKUP_PREPS" ]; then
-    for prep in "$MT_BACKUP_PREPS/*"; do
-        echo "  -> deleting preparation file: $prep"
+    for prep in $MT_BACKUP_PREPS/*; do
+        echo "  -> deleting preparation file: $(basename $prep)"
         rm $prep
     done
 fi
 
+#backup backupstep-skripts
+echo "* executing backup of the backup steps"
+tar -cPf $PREPFOLDER/$TODAY.milquetoast_backupd.tar \
+  $MT_BACKUPD/[0-9+]*
+
 #execute simple backup scripts
 echo "* executing backup steps:"
-cd $MT_BACKUPD
-for backupstep in $(ls -1 [0-9+]* 2> /dev/null); do
-    echo "  -> $backupstep"
-    $MT_BACKUPD/$backupstep $MT_BACKUP_PREPS $TODAY 
+for backupstep in $(ls -1 $MT_BACKUPD/[0-9+]* 2> /dev/null); do
+    echo "  -> $(basename $backupstep)"
+    $backupstep $MT_BACKUP_PREPS $TODAY 
 done
 
 #create a single backup file for today
 echo "* creating single backup file for today"
-cd $MT_BACKUP_PREPS
-tar -zcPf $MT_BACKUPS/$TODAY.$MT_MAIN_NAME.tar.gz ./$TODAY*
+tar -zcPf $MT_BACKUPS/$TODAY.$MT_MAIN_NAME.tar.gz $MT_BACKUP_PREPS/$TODAY*
 
 #delete old backups
 ROTATE_DELETE_OPTIONS="--daily=10 --weekly=5 --monthly=13 --yearly=5"
