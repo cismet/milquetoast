@@ -47,11 +47,6 @@ cd $MT_BACKUP_PREPS
 tar -zcPf $MT_BACKUPS/$TODAY.$MT_MAIN_NAME.tar.gz $TODAY*
 cd -
 
-#delete old backups
-ROTATE_DELETE_OPTIONS="--daily=10 --weekly=5 --monthly=13 --yearly=5"
-echo "* executing rotate-delete $ROTATE_DELETE_OPTIONS $MT_BACKUPS"
-docker run -t --rm -v $MT_BACKUPS:/data cismet/rotated-delete $ROTATE_DELETE_OPTIONS
-
 #externalize
 echo "* externalize"
 docker run -t --rm \
@@ -60,7 +55,9 @@ docker run -t --rm \
   -v $MT_RCLONE_CONF:/home/.rclone.conf \
   -v $MT_BACKUPS:/data \
   farmcoolcow/rclone \
-    sync /data gdrive:/cismet/backups/$MT_MAIN_NAME
+    copy /data gdrive:/cismet/backups/$MT_MAIN_NAME
+
+rm $MT_BACKUPS/$TODAY.$MT_MAIN_NAME.tar.gz
 
 echo
 echo "------------------------------------------------------- done."
