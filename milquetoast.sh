@@ -54,13 +54,21 @@ docker run -t --rm -v $MT_BACKUPS:/data cismet/rotated-delete $ROTATE_DELETE_OPT
 
 #externalize
 echo "* externalize"
+cp --preserve=all $MT_RCLONE_CONF /tmp/milquetoast.rclone.conf
 docker run -t --rm \
   -e PUID=$(id -u backup) \
   -e PGID=$(id -g backup) \
-  -v $MT_RCLONE_CONF:/home/.rclone.conf \
+  -v /tmp/milquetoast.rclone.conf:/home/.rclone.conf \
   -v $MT_BACKUPS:/data \
   farmcoolcow/rclone \
     sync /data gdrive:/cismet/backups/$MT_MAIN_NAME
 
+[ $? -eq 0 ] && {
+  rm $MT_BACKUPS/$TODAY.$MT_MAIN_NAME.tar.gz
+} || {
+  echo "externalize failed. could not upload backup." 1>&2
+}
+
 echo
 echo "------------------------------------------------------- done."
+
