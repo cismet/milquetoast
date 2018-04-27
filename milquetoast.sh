@@ -58,8 +58,6 @@ docker run -t --rm \
   farmcoolcow/rclone \
     copy /data gdrive:/cismet/backups/$MT_MAIN_NAME
 
-rm $MT_BACKUPS/$TODAY.$MT_MAIN_NAME.tar.gz
-
 [ $? -eq 0 ] && {
   rm $MT_BACKUPS/$TODAY.$MT_MAIN_NAME.tar.gz
 } || {
