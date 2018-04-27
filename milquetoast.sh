@@ -31,7 +31,7 @@ fi
 
 #backup backupstep-skripts
 echo "* executing backup of the backup steps"
-tar -cPf $PREPFOLDER/$TODAY.milquetoast_backupd.tar \
+tar -cPf $MT_BACKUP_PREPS/$TODAY.milquetoast_backupd.tar \
   $MT_BACKUPD/[0-9+]*
 
 #execute simple backup scripts
