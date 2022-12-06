@@ -54,9 +54,10 @@ docker run -t --rm \
   -e PUID=$(id -u backup) \
   -e PGID=$(id -g backup) \
   -v /tmp/milquetoast.rclone.conf:/home/.rclone.conf \
+  -v /etc/milquetoast/id_rsa:/home/.ssh/id_rsa:ro \
   -v $MT_BACKUPS:/data \
   farmcoolcow/rclone \
-    copy /data gdrive:/cismet/backups/$MT_MAIN_NAME
+    copy /data $MT_RCLONE_TARGET
 
 [ $? -eq 0 ] && {
   rm $MT_BACKUPS/$TODAY.$MT_MAIN_NAME.tar.gz
